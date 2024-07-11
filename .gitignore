@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 *.pdf
+env/
 
 # IntelliJ related
 *.iml

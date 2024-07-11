@@ -4,7 +4,7 @@ import "package:flutter_markdown/flutter_markdown.dart";
 import "package:flutter/material.dart";
 
 int questionAnswerId = 0;
-const apiKey = "AIzaSyDTwm_NNQo82hGlr8juULY5ee7uYrHHhYU";
+const String apiKey = String.fromEnvironment("apiKey");
 final Map<int, List<String>> searches = {};
 String? aiReply;
 
