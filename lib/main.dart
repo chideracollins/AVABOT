@@ -1,9 +1,13 @@
+import "package:flutter_dotenv/flutter_dotenv.dart";
+
 import 'package:flutter/material.dart';
+
 import 'pages/dashboard.dart';
 import 'pages/shop.dart';
 import 'pages/account.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   return runApp(const Avabot());
 }
 
