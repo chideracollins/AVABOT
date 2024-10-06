@@ -1,22 +1,15 @@
 import "package:flutter/material.dart";
 
-class Biometric extends StatefulWidget {
-  const Biometric({super.key});
+class FingerPrintPage extends StatefulWidget {
+  const FingerPrintPage({super.key});
 
   @override
-  State<Biometric> createState() => _BiometricState();
+  State<FingerPrintPage> createState() => _FingerPrintPageState();
 }
 
-class _BiometricState extends State<Biometric> {
+class _FingerPrintPageState extends State<FingerPrintPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return;
-        },
-      ),
-    );
+    return Container();
   }
 }

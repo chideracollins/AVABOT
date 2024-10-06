@@ -1,19 +1,23 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-class Shop extends StatefulWidget {
-  const Shop({super.key});
+import '../widgets/shop_app_bar.dart';
+import '../widgets/shop_body.dart';
+import '../widgets/shop_drawer.dart';
+
+class ShopPage extends StatefulWidget {
+  const ShopPage({super.key});
 
   @override
-  State<Shop> createState() => _ShopState();
+  State<ShopPage> createState() => _ShopPageState();
 }
 
-class _ShopState extends State<Shop> {
+class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Welcome to Shop"),
-      ),
+      appBar: ShopAppBar(),
+      drawer: ShopDrawer(),
+      body: ShopBody(),
     );
   }
 }

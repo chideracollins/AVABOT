@@ -1,14 +1,25 @@
 import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 
-import 'package:flutter/material.dart';
-
-import 'pages/dashboard.dart';
-import 'pages/shop.dart';
-import 'pages/account.dart';
+import "models/theme_mode.dart";
+import "pages/account.dart";
+import "pages/card.dart";
+import "pages/cart.dart";
+import "pages/face_id.dart";
+import "pages/fingerprint.dart";
+import "pages/settings.dart";
+import "services/auth.dart";
+import "utils/themes/themes.dart";
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
-  return runApp(const Avabot());
+  return runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeModeModel(),
+      child: const Avabot(),
+    ),
+  );
 }
 
 class Avabot extends StatelessWidget {
@@ -17,12 +28,19 @@ class Avabot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Dashboard(),
+      home: AuthService(),
       debugShowCheckedModeBanner: false,
-      title: const String.fromEnvironment("Avabot", defaultValue: "Avabot"),
+      title: "Avabot",
+      theme: Themes.lightTheme,
+      darkTheme: Themes.darkTheme,
+      themeMode: Provider.of<ThemeModeModel>(context).themeMode,
       routes: {
-        "/shop": (context) => const Shop(),
-        "/account": (context) => const Account(),
+        "/account": (context) => const AccountPage(),
+        "/card": (context) => const CardPage(),
+        "/cart": (context) => const CartPage(),
+        "/face-id": (context) => const FaceIdPage(),
+        "/fingerprint": (context) => const FingerPrintPage(),
+        "/settings": (context) => const SettingsPage(),
       },
     );
   }
