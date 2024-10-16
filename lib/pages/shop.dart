@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/shop_app_bar.dart';
-import '../widgets/shop_body.dart';
-import '../widgets/shop_drawer.dart';
+import '../widgets/shop_components/shop_app_bar.dart';
+import '../widgets/shop_components/shop_body.dart';
+import '../widgets/shop_components/shop_drawer.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
+import '../../models/shopping_cart.dart';
+import '../../utils/constants/images.dart';
 
 class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ShopAppBar({super.key});
@@ -13,7 +14,7 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
         builder: (BuildContext context) {
           return IconButton(
             icon: const Image(
-              image: AssetImage("assets/images/Menu.png"),
+              image: AssetImage(Images.menuIcon),
             ),
             onPressed: () {
               Scaffold.of(context).openDrawer();
@@ -25,7 +26,7 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset("assets/images/Logo.png"),
+          Image.asset(Images.logo),
         ],
       ),
       actions: [
@@ -47,9 +48,9 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: Theme.of(context).colorScheme.surface,
                 shape: BoxShape.circle,
               ),
-              child: Consumer<CartModel>(
+              child: Consumer<ShoppingCart>(
                 builder: (context, cart, child) {
-                  final cartModel = context.read<CartModel>();
+                  final cartModel = context.read<ShoppingCart>();
                   return Text(cartModel.count());
                 },
               ),
