@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'auth/login.dart';
 import 'pages/dashboard.dart';
 import 'pages/shop.dart';
 import 'pages/account.dart';
@@ -13,10 +14,11 @@ class Avabot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Dashboard(),
+      home: const Login(),
       debugShowCheckedModeBanner: false,
       title: const String.fromEnvironment("Avabot", defaultValue: "Avabot"),
       routes: {
+        "/dashboard": (context) => const Dashboard(),
         "/shop": (context) => const Shop(),
         "/account": (context) => const Account(),
       },

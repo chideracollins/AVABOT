@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79914860910",
+    "project_id": "shopbot-717d1",
+    "storage_bucket": "shopbot-717d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79914860910:android:1f7e18b789484f4a1e417f",
+        "android_client_info": {
+          "package_name": "com.example.avabot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZd1hPo8B3KpYPzRqB7y-Kne8_8kWDb3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
