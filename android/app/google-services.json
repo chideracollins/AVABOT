@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:79914860910:android:a259fcae68d003b41e417f",
+        "android_client_info": {
+          "package_name": "com.avabot.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZd1hPo8B3KpYPzRqB7y-Kne8_8kWDb3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:79914860910:android:1f7e18b789484f4a1e417f",
         "android_client_info": {
           "package_name": "com.example.avabot"

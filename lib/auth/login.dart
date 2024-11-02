@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
+import 'auth_manager.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  final _formKey = GlobalKey<FormState>(); // Form key to handle validation
-  bool _isObscure = true; // For showing/hiding password
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _isObscure = true;
+  bool _isLoading = false;
 
   // Function to validate email format
   String? _validateEmail(String? value) {
@@ -27,21 +29,37 @@ class _LoginState extends State<Login> {
     return null;
   }
 
-  // Function to validate password
+  // Validate password
   String? _validatePassword(String? value) {
+    const passwordPattern =
+        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
+    final regExp = RegExp(passwordPattern);
+
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
-    } else if (value.length < 6) {
-      return 'Password should be at least 6 characters';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Password must be at least 8 characters, include an uppercase letter, number, and special character';
     }
     return null;
   }
 
   // Method to handle login logic
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await AuthManager()
+          .login(context, _emailController.text, _passwordController.text);
+
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.pushReplacementNamed(context, '/dashboard');
     }
   }
 
@@ -83,7 +101,7 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 20),
 
             Form(
-              key: _formKey, 
+              key: _formKey,
               child: Column(
                 children: [
                   // Email TextField
@@ -95,8 +113,7 @@ class _LoginState extends State<Login> {
                         labelText: 'Email',
                         labelStyle: const TextStyle(color: Color(0xFF71727A)),
                         hintText: 'Enter your email',
-                        hintStyle:
-                            const TextStyle(color: Color(0xFF71727A)),
+                        hintStyle: const TextStyle(color: Color(0xFF71727A)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -117,14 +134,15 @@ class _LoginState extends State<Login> {
                         labelText: 'Password',
                         labelStyle: const TextStyle(color: Color(0xFF71727A)),
                         hintText: 'Enter your password',
-                        hintStyle:
-                            const TextStyle(color: Color(0xFF71727A)),
+                        hintStyle: const TextStyle(color: Color(0xFF71727A)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isObscure ? Icons.visibility : Icons.visibility_off,
+                            _isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -174,31 +192,33 @@ class _LoginState extends State<Login> {
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
                   ),
-                  onPressed: _login, // Login logic
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF0797BA),
-                          Color(0xFF01F123)
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      constraints: const BoxConstraints(maxHeight: 50.0),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
+                  onPressed:
+                      _isLoading ? null : _login, // Disable button if loading
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        )
+                      : Ink(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF0797BA), Color(0xFF01F123)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            constraints: const BoxConstraints(maxHeight: 50.0),
+                            child: const Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -212,9 +232,9 @@ class _LoginState extends State<Login> {
                 const Text('Not a member?'),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(builder: (context) => const Signup()),
+                      '/signup',
                     );
                   },
                   child: const Text(

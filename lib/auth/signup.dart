@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'auth_manager.dart';
 
 class Signup extends StatefulWidget {
-  const Signup({Key? key}) : super(key: key);
+  const Signup({super.key});
 
   @override
   State<Signup> createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
-  final _formKey = GlobalKey<FormState>(); // Form key to handle validation
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -17,7 +18,8 @@ class _SignupState extends State<Signup> {
 
   bool _isObscurePassword = true;
   bool _isObscureConfirmPassword = true;
-  bool _isTermsAccepted = false; // Track terms and conditions acceptance
+  bool _isTermsAccepted = false;
+  bool _isLoading = false;
 
   // Function to validate email format
   String? _validateEmail(String? value) {
@@ -34,10 +36,14 @@ class _SignupState extends State<Signup> {
 
   // Function to validate password and confirm password
   String? _validatePassword(String? value) {
+    const passwordPattern =
+        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$';
+    final regExp = RegExp(passwordPattern);
+
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
-    } else if (value.length < 6) {
-      return 'Password should be at least 6 characters';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Password must be at least 8 characters, include an uppercase letter, number, and special character';
     }
     return null;
   }
@@ -51,8 +57,14 @@ class _SignupState extends State<Signup> {
     return null;
   }
 
-  void _signup() {
+  void _signup() async {
     if (_formKey.currentState!.validate() && _isTermsAccepted) {
+      setState(() {
+        _isLoading = true;
+      });
+      // Proceed with sign-up logic
+      await AuthManager().signUp(context, _emailController.text,
+          _passwordController.text, _nameController.text);
       // If all fields are valid and terms are accepted, print the form data
       print('Name: ${_nameController.text}');
       print('Email: ${_emailController.text}');
@@ -60,7 +72,10 @@ class _SignupState extends State<Signup> {
       print('Confirm Password: ${_confirmPasswordController.text}');
       print('Terms accepted: $_isTermsAccepted');
 
-      // Proceed with sign-up logic
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.pushReplacementNamed(context, '/dashboard');
     } else if (!_isTermsAccepted) {
       // Show a message if terms and conditions are not accepted
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,6 +89,16 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF0797BA)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -82,7 +107,7 @@ class _SignupState extends State<Signup> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 5),
 
                 // Sign Up Title
                 const Text(
@@ -260,35 +285,41 @@ class _SignupState extends State<Signup> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        backgroundColor:
-                            Colors.transparent, // To apply gradient
+                        backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
                       ),
-                      onPressed: _signup, // Use the updated login method
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF0797BA),
-                              Color(0xFF01F123)
-                            ], // Gradient colors
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          constraints: const BoxConstraints(maxHeight: 50.0),
-                          child: const Text(
-                            'Signup',
-                            style: TextStyle(
-                              color: Colors.white, // White text
-                              fontWeight: FontWeight.bold,
+                      onPressed: _isLoading
+                          ? null
+                          : _signup, // Disable button if loading
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white, // Loading indicator color
+                            )
+                          : Ink(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF0797BA),
+                                    Color(0xFF01F123)
+                                  ], // Gradient colors
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                constraints:
+                                    const BoxConstraints(maxHeight: 50.0),
+                                child: const Text(
+                                  'Signup',
+                                  style: TextStyle(
+                                    color: Colors.white, // White text
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                 ),

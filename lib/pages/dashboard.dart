@@ -1,7 +1,8 @@
 import "package:google_generative_ai/google_generative_ai.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
-
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import "../providers/auth_provider.dart";
 
 int questionAnswerId = 0;
 const String apiKey = String.fromEnvironment("apiKey");
@@ -40,6 +41,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final firstName = authProvider.name?.split(" ")[0] ?? "Guest";
+    print(authProvider.name);
+
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -169,7 +174,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ),
-                    const Text("Wisdom Ahaneku"),
+                    Text(authProvider.name ?? "Guest"),
                   ],
                 ),
               )
@@ -230,7 +235,7 @@ class _DashboardState extends State<Dashboard> {
                         Image.asset("assets/images/Icon.png"),
                         Text.rich(
                           TextSpan(
-                            text: "Hi Wisdom, I'm ",
+                            text: "Hi $firstName, I'm ",
                             children: [
                               TextSpan(
                                 text: "Ava!",
