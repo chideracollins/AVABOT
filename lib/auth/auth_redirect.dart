@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../pages/dashboard.dart';
+
 import 'login.dart';
+import '../pages/shop.dart';
 
 class AuthRedirect extends StatelessWidget {
   const AuthRedirect({super.key});
@@ -14,7 +15,7 @@ class AuthRedirect extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          return const Dashboard();
+          return const ShopPage();
         } else {
           return const Login();
         }

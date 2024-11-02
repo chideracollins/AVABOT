@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'auth_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../pages/shop.dart';
+import '../widgets/dialogs/error_dialog.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -10,6 +13,7 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -57,25 +61,26 @@ class _SignupState extends State<Signup> {
     return null;
   }
 
-  void _signup() async {
+  Future<Widget?> _signup() async {
     if (_formKey.currentState!.validate() && _isTermsAccepted) {
       setState(() {
         _isLoading = true;
       });
       // Proceed with sign-up logic
-      await AuthManager().signUp(context, _emailController.text,
-          _passwordController.text, _nameController.text);
-      // If all fields are valid and terms are accepted, print the form data
-      print('Name: ${_nameController.text}');
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
-      print('Confirm Password: ${_confirmPasswordController.text}');
-      print('Terms accepted: $_isTermsAccepted');
+      try {
+        final credential = await _auth.createUserWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+        await credential.user?.updateDisplayName(_nameController.text);
+        await _auth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+      } catch (e) {
+        ErrorDialog(e.toString());
+      }
 
       setState(() {
         _isLoading = false;
       });
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      return const ShopPage();
     } else if (!_isTermsAccepted) {
       // Show a message if terms and conditions are not accepted
       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,6 +89,7 @@ class _SignupState extends State<Signup> {
         ),
       );
     }
+    return null;
   }
 
   @override

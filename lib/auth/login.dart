@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'auth_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../pages/shop.dart';
+import '../widgets/dialogs/error_dialog.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,6 +13,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -44,23 +48,28 @@ class _LoginState extends State<Login> {
   }
 
   // Method to handle login logic
-  void _login() async {
+  Future<Widget?> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      await AuthManager()
-          .login(context, _emailController.text, _passwordController.text);
+      try {
+        await _auth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+      } catch (e) {
+        ErrorDialog(e.toString());
+      }
 
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
+      // print('Email: ${_emailController.text}');
+      // print('Password: ${_passwordController.text}');
 
       setState(() {
         _isLoading = false;
       });
 
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      return const ShopPage();
     }
+    return null;
   }
 
   @override

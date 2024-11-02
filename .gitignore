@@ -11,6 +11,7 @@
 migrate_working_dir/
 *.pdf
 env/
+.env
 
 # IntelliJ related
 *.iml
