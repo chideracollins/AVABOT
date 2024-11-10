@@ -18,8 +18,18 @@ class ThemeModeData extends ChangeNotifier {
     }
   }
 
-  void changeThemeMode(String mode) async {
-    await prefs.setString("themeMode", mode);
+  void changeThemeMode(ThemeMode? mode) async {
+    switch (mode) {
+      case ThemeMode.light:
+        await prefs.setString("themeMode", "light");
+        break;
+      case ThemeMode.dark:
+        await prefs.setString("themeMode", "dark");
+        break;
+      default:
+        await prefs.setString("themeMode", "system");
+        break;
+    }
     notifyListeners();
   }
 }

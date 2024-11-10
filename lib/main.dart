@@ -8,6 +8,7 @@ import "package:shared_preferences/shared_preferences.dart";
 import 'firebase_options.dart';
 import 'auth/auth_redirect.dart';
 import 'auth/signup.dart';
+import "models/shopping_cart.dart";
 import "models/shopping_session.dart";
 import "models/theme_mode_data.dart";
 import "pages/account.dart";
@@ -33,6 +34,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => ThemeModeData(prefs),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ShoppingCart(),
         ),
         ChangeNotifierProvider(
           create: (_) => ShoppingSession(chat),

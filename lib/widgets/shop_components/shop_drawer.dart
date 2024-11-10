@@ -1,109 +1,96 @@
 import 'package:flutter/material.dart';
 
-// import '../pages/shop.dart';
+import '../../utils/constants/images.dart';
+import '../../widgets/dialogs/theme_dialog.dart';
 
 class ShopDrawer extends StatelessWidget {
   const ShopDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Drawer(
-        shape: BeveledRectangleBorder(),
-        // child: Padding(),
-      );
+    return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const BeveledRectangleBorder(),
+      child: Column(
+        children: [
+          // Header with logo and "New Chat" icon
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  Images.logo,
+                  width: 40.0,
+                  height: 40.0,
+                ),
+                GestureDetector(
+                  child: Image.asset(Images.newChatIcon),
+                  onTap: () {
+                    // Define the action for the "New Chat" icon
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Divider(), // Divider between header and menu items
+
+          // Card menu item
+          ListTile(
+            leading: Icon(Icons.credit_card,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
+            title: Text(
+              'Card',
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant), // Gray text color
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, "/card");
+            },
+          ),
+
+          // Theme menu item
+          ListTile(
+            leading: Icon(
+              Icons.color_lens,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            title: Text(
+              'Theme',
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant), // Gray text color
+            ),
+            onTap: () {
+              showThemeSelectionModal(context);
+            },
+          ),
+
+          // Account menu item
+          ListTile(
+            leading: Icon(
+              Icons.account_circle,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurfaceVariant, // Blue icon color
+            ),
+            title: Text(
+              'Account',
+              style: TextStyle(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant), // Gray text color
+            ),
+            onTap: () {
+              // Define navigation or action for "Account" item
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
-
-// padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-//           child: Column(
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-//                 child: Row(
-//                   children: [
-//                     Image.asset("assets/images/Main-Logo.png"),
-//                     const Padding(
-//                       padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
-//                       child: Text('New Chat'),
-//                     ),
-//                     const Spacer(),
-//                     GestureDetector(
-//                       child: Image.asset("assets/images/New-Chat.png"),
-//                       onTap: () {
-//                         return ShopPage();
-//                       },
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Expanded(
-//                 child: searches.isNotEmpty == true
-//                     ? ListView(
-//                         // padding: EdgeInsets.zero,
-//                         children: <Widget>[
-//                           const Text(
-//                             "Today",
-//                             style: TextStyle(
-//                               color: Colors.black,
-//                               fontSize: 16,
-//                             ),
-//                           ),
-//                           for (var _ in searches.keys.toList().reversed)
-//                             ListTile(
-//                               contentPadding: EdgeInsets.zero,
-//                               title: Text(
-//                                 searches[_]![0],
-//                                 softWrap: true,
-//                                 textDirection: TextDirection.ltr,
-//                                 overflow: TextOverflow.ellipsis,
-//                                 style: const TextStyle(
-//                                   color: Colors.grey,
-//                                   fontSize: 16,
-//                                 ),
-//                               ),
-//                               onTap: () {
-//                                 setState(
-//                                   () {
-//                                     aiReply = searches[_]![1];
-//                                     Navigator.pop(context);
-//                                   },
-//                                 );
-//                               },
-//                             ),
-//                         ],
-//                       )
-//                     : Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Text(
-//                             "Message Ava !!!",
-//                             style: TextStyle(
-//                               color: _greenAccent,
-//                               fontSize: 16.0,
-//                             ),
-//                           ),
-//                           const Text("Previous message logs appears here..."),
-//                         ],
-//                       ),
-//               ),
-//               SizedBox(
-//                 child: Row(
-//                   children: [
-//                     Padding(
-//                       padding: const EdgeInsets.fromLTRB(0.0, 0.0, 12.0, 0.0),
-//                       child: GestureDetector(
-//                         onTap: () => Navigator.pushNamed(context, "/account"),
-//                         child: ClipOval(
-//                           child: CircleAvatar(
-//                             child: Image.asset("assets/images/Main-Logo.png"),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     const Text("Wisdom Ahaneku"),
-//                   ],
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),

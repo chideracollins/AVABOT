@@ -41,17 +41,26 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
                 },
               ),
             ),
-            Container(
-              width: 8.0,
-              height: 8.0,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                shape: BoxShape.circle,
-              ),
+            Positioned(
+              right: 0,
+              top: 0,
               child: Consumer<ShoppingCart>(
                 builder: (context, cart, child) {
-                  final cartModel = context.read<ShoppingCart>();
-                  return Text(cartModel.count());
+                  return Container(
+                    padding: const EdgeInsets.all(2.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      cart.count().toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
