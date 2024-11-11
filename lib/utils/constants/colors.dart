@@ -15,6 +15,7 @@ class AppColors {
   static Color shadowColor = const Color.fromRGBO(116, 212, 130, 0.49);
   static Color hintAndDisabledColor = const Color.fromRGBO(143, 144, 152, 1);
   static Color onSecondaryAndCardColor = const Color.fromRGBO(31, 32, 36, 1);
+  static Color warningColor = const Color.fromARGB(255, 253, 99, 88);
 
   static Color secondaryColor =
       const Color.fromRGBO(248, 249, 254, 1); // For Avabot reply widget

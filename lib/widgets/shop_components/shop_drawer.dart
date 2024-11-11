@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/constants/images.dart';
 import '../../widgets/dialogs/theme_dialog.dart';
+import '../../widgets/dialogs/account_dialog.dart';
 
 class ShopDrawer extends StatelessWidget {
   const ShopDrawer({super.key});
+
+  void _showAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AccountDialog();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +52,8 @@ class ShopDrawer extends StatelessWidget {
             title: Text(
               'Card',
               style: TextStyle(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant), // Gray text color
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ), // Gray text color
             ),
             onTap: () {
               Navigator.pushNamed(context, "/card");
@@ -61,9 +69,8 @@ class ShopDrawer extends StatelessWidget {
             title: Text(
               'Theme',
               style: TextStyle(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant), // Gray text color
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ), // Gray text color
             ),
             onTap: () {
               showThemeSelectionModal(context);
@@ -74,19 +81,16 @@ class ShopDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(
               Icons.account_circle,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurfaceVariant, // Blue icon color
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             title: Text(
               'Account',
               style: TextStyle(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant), // Gray text color
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ), // Gray text color
             ),
             onTap: () {
-              // Define navigation or action for "Account" item
+              _showAccountDialog(context);
             },
           ),
         ],
