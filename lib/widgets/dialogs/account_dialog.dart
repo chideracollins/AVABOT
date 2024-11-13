@@ -10,6 +10,9 @@ class AccountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
       contentPadding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
       content: Column(
         mainAxisSize: MainAxisSize.min,

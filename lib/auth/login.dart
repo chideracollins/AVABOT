@@ -57,7 +57,13 @@ class _LoginState extends State<Login> {
         await _auth.signInWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text);
       } catch (e) {
-        ErrorDialog(e.toString());
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => const ErrorDialog(
+                'An unknown error occurred. Please try again.'),
+          );
+        }
       }
 
       // print('Email: ${_emailController.text}');

@@ -61,35 +61,50 @@ class _SignupState extends State<Signup> {
     return null;
   }
 
-  Future<Widget?> _signup() async {
+  Future<void> _signup() async {
     if (_formKey.currentState!.validate() && _isTermsAccepted) {
       setState(() {
         _isLoading = true;
       });
-      // Proceed with sign-up logic
+
       try {
+        // Proceed with sign-up logic
         final credential = await _auth.createUserWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text);
         await credential.user?.updateDisplayName(_nameController.text);
-        await _auth.signInWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-      } catch (e) {
-        ErrorDialog(e.toString());
-      }
 
-      setState(() {
-        _isLoading = false;
-      });
-      return const ShopPage();
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ShopPage()),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => const ErrorDialog(
+                'An unknown error occurred. Please try again.'),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     } else if (!_isTermsAccepted) {
-      // Show a message if terms and conditions are not accepted
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You must accept the terms and conditions to proceed.'),
-        ),
-      );
+      // Show message if terms and conditions are not accepted
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('You must accept the terms and conditions to proceed.'),
+          ),
+        );
+      }
     }
-    return null;
   }
 
   @override

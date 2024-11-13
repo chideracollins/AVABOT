@@ -14,7 +14,7 @@ class Themes {
       surface: AppColors.bgColor,
       surfaceDim: AppColors.dialogColor,
       onSurfaceVariant: AppColors.drawerTileColor,
-      primary: Colors.red.shade200,
+      primary: AppColors.primaryColor,
       secondary: const Color.fromARGB(255, 26, 58, 86),
       tertiary: const Color.fromARGB(255, 64, 160, 69),
       // onSurface: Colors.red,
