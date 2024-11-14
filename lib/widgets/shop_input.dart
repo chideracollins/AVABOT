@@ -13,78 +13,80 @@ class ShopInput extends StatefulWidget {
 }
 
 class _ShopInputState extends State<ShopInput> {
-  TextEditingController? _textEditingController;
+  final TextEditingController _textEditingController = TextEditingController();
   bool _enableInputBox = true;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        TextField(
-          controller: _textEditingController,
-          autofocus: true,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: "Message Ava...",
-            contentPadding:
-                const EdgeInsets.only(left: 80.0), // Adjust for icons
-            enabled: _enableInputBox,
-            suffixIcon: IconButton(
-              onPressed: () async {
-                // if (_textEditingController?.text.length < 2) return;
-                setState(() {
-                  _enableInputBox = false;
-                });
-                await Provider.of<ShoppingSession>(context, listen: false)
-                    .userRequest(question: _textEditingController?.text);
-                if (context.mounted) {
+    return Consumer<ShoppingSession>(builder: (context, modelInstance, child) {
+      return Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          TextField(
+            controller: _textEditingController,
+            autofocus: true,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: "Message Ava...",
+              contentPadding:
+                  const EdgeInsets.only(left: 80.0), // Adjust for icons
+              enabled: _enableInputBox,
+              suffixIcon: IconButton(
+                onPressed: () async {
+                  // if (_textEditingController?.text.length < 2) return;
                   setState(() {
-                    _textEditingController?.clear();
-                    _enableInputBox = true;
+                    _enableInputBox = false;
                   });
-                }
-              },
-              icon: Container(
-                padding: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                  borderRadius:
-                      const BorderRadius.all(Radius.elliptical(4.0, 4.0)),
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.secondary,
-                      Theme.of(context).colorScheme.primary,
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
+                  await modelInstance.userRequest(
+                      question: _textEditingController.text);
+                  if (context.mounted) {
+                    setState(() {
+                      _textEditingController.clear();
+                      _enableInputBox = true;
+                    });
+                  }
+                },
+                icon: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        const BorderRadius.all(Radius.elliptical(4.0, 4.0)),
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.secondary,
+                        Theme.of(context).colorScheme.primary,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
                   ),
+                  child: Image.asset(Images.sendIcon),
                 ),
-                child: Image.asset(Images.sendIcon),
               ),
             ),
+            showCursor: true,
           ),
-          showCursor: true,
-        ),
-        Positioned(
-          left: 0,
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () async {
-                  await UploadImage.fromGallery();
-                },
-                icon: const Icon(Icons.image_outlined),
-              ),
-              IconButton(
-                onPressed: () async {
-                  await UploadImage.fromCamera();
-                },
-                icon: const Icon(Icons.camera_alt_outlined),
-              ),
-            ],
+          Positioned(
+            left: 0,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    await UploadImage.fromGallery();
+                  },
+                  icon: const Icon(Icons.image_outlined),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await UploadImage.fromCamera();
+                  },
+                  icon: const Icon(Icons.camera_alt_outlined),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

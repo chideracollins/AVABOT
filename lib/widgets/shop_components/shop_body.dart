@@ -19,16 +19,19 @@ class _ShopBodyState extends State<ShopBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-      child: Column(
-        children: [
-          Provider.of<ShoppingSession>(context).hastStarted
-              ? const ChatInterface()
-              : const DefaultShopInterface(),
-          const ShopInput(),
-        ],
-      ),
-    );
+    return Consumer<ShoppingSession>(builder: (context, modelInstance, child) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Provider.of<ShoppingSession>(context).hastStarted
+                ? const ChatInterface()
+                : const DefaultShopInterface(),
+            const ShopInput(),
+          ],
+        ),
+      );
+    });
   }
 }

@@ -7,7 +7,7 @@ import '../services/gemini.dart';
 import 'user_question.dart';
 
 class ShoppingSession extends ChangeNotifier {
-  late Map<UserQuestion, GeminiResponse?> history = {};
+  late Map<UserQuestion, GeminiResponse> history = {};
   final ChatSession chat;
 
   ShoppingSession(this.chat);
@@ -30,8 +30,6 @@ class ShoppingSession extends ChangeNotifier {
 
     final UserQuestion userQuestion =
         UserQuestion(question: question, attachedImage: attachedImage);
-    history[userQuestion] = null;
-    notifyListeners();
 
     history[userQuestion] = await Gemini.generateReply(chat, userQuestion);
     notifyListeners();

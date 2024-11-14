@@ -18,43 +18,38 @@ class AiReply extends StatefulWidget {
 class _AiReplyState extends State<AiReply> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipOval(
-              child: CircleAvatar(
-                child: Image.asset(
-                  Images.launcherIcon,
-                  fit: BoxFit.cover,
-                ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipOval(
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              child: Image.asset(
+                Images.launcherIcon,
+                fit: BoxFit.cover,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 0.0),
-              child: Text(
-                "Avabot",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(52.0, 24.0, 0.0, 0.0),
-          child: Expanded(
-            child: MarkdownBody(
-              data: Provider.of<ShoppingSession>(context)
-                      .lastAiResponse
-                      ?.response ??
-                  "Nothing to show here yet.",
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 0.0),
+            child: Text(
+              "Avabot",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(52.0, 12.0, 0.0, 0.0),
+        child: MarkdownBody(
+          data:
+              Provider.of<ShoppingSession>(context).lastAiResponse?.response ??
+                  "Nothing to show here yet.",
         ),
-      ],
-    );
+      ),
+    ]);
   }
 }
