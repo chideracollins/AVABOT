@@ -9,8 +9,7 @@ class DefaultShopInterface extends StatelessWidget {
   User? get user => FirebaseAuth.instance.currentUser;
 
   String getFirstName() {
-    // Extract only the first name if displayName is available
-    return user?.displayName?.split(' ').first ?? 'there';
+    return user?.displayName?.split(' ').first ?? 'There';
   }
 
   @override
