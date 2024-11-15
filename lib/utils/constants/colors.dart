@@ -17,13 +17,14 @@ class AppColors {
   static Color onSecondaryAndCardColor = const Color.fromRGBO(31, 32, 36, 1);
   static Color warningColor = const Color.fromARGB(255, 253, 99, 88);
 
-  static Color secondaryColor =
+  static Color bgAiReply =
       const Color.fromRGBO(248, 249, 254, 1); // For Avabot reply widget
+  static Color bgAiReplyDark = Color.fromARGB(255, 36, 36, 37);
 
   static Gradient buttonLinearGradient =
       LinearGradient(colors: [tertiaryColor, primaryColor]);
 
-  static Gradient cardLinearGradient = LinearGradient(
+  static Gradient cardLinearGradient = const LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [

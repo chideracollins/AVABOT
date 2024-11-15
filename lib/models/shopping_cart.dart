@@ -5,7 +5,7 @@ import 'product.dart';
 class ShoppingCart extends ChangeNotifier {
   List<Product>? products;
 
-  String count() {
+  String get count {
     return products?.length.toString() ?? "0";
   }
 

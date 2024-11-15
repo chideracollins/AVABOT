@@ -16,15 +16,6 @@ class ShoppingSession extends ChangeNotifier {
     return history.isNotEmpty == true ? true : false;
   }
 
-  int get historyCount {
-    return history.length;
-  }
-
-  GeminiResponse? get lastAiResponse {
-    final entries = history.entries;
-    return entries.last.value;
-  }
-
   Future<void> userRequest({String? question, XFile? attachedImage}) async {
     if (question == null && attachedImage == null) return;
 

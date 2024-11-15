@@ -44,6 +44,7 @@ class DummyJson {
   }
 
   static Future<List<Product>?> getProducts(List<String>? data) async {
+    print("DummyJson is being called, with this values: $data");
     if (data == null) return null;
     List<Product> products = [];
     RetryClient client = RetryClient(Client());

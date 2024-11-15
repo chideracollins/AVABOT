@@ -1,7 +1,5 @@
-import 'package:avabot/models/shopping_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:provider/provider.dart';
 
 import '../models/gemini_response.dart';
 import '../utils/constants/images.dart';
@@ -18,38 +16,68 @@ class AiReply extends StatefulWidget {
 class _AiReplyState extends State<AiReply> {
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipOval(
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              child: Image.asset(
-                Images.launcherIcon,
-                fit: BoxFit.cover,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    child: Image.asset(
+                      Images.launcherIcon,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 0.0),
-            child: Text(
-              "Avabot",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+          Expanded(
+            // Constrains the content to available space
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              "Avabot",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                          MarkdownBody(
+                            data: widget.response.response,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(52.0, 12.0, 0.0, 0.0),
-        child: MarkdownBody(
-          data:
-              Provider.of<ShoppingSession>(context).lastAiResponse?.response ??
-                  "Nothing to show here yet.",
-        ),
-      ),
-    ]);
+    );
   }
 }

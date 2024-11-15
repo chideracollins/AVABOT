@@ -26,7 +26,7 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset(Images.logo),
+          Image.asset(Images.logoWithName),
         ],
       ),
       actions: [
@@ -42,8 +42,8 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             Positioned(
-              right: 0,
-              top: 0,
+              right: 12,
+              top: -4,
               child: Consumer<ShoppingCart>(
                 builder: (context, cart, child) {
                   return Container(
@@ -53,10 +53,10 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Text(
-                      cart.count().toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.0,
+                      cart.count,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 12.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

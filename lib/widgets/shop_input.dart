@@ -33,7 +33,7 @@ class _ShopInputState extends State<ShopInput> {
               enabled: _enableInputBox,
               suffixIcon: IconButton(
                 onPressed: () async {
-                  // if (_textEditingController?.text.length < 2) return;
+                  if (_textEditingController.text.length < 2) return;
                   setState(() {
                     _enableInputBox = false;
                   });
