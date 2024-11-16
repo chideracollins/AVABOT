@@ -50,6 +50,8 @@ dependencies:
   firebase_auth: ^5.2.1
   firebase_storage: ^12.3.0
   cloud_firestore: ^5.4.1
+  flutter_credit_card: ^4.0.1
+  credit_card_type_detector: ^3.0.0
 
 dev_dependencies:
   flutter_test:
