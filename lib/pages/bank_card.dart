@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/dialogs/card_limit_dialog .dart';
-// import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 
 import 'add_card.dart';
+import '../services/credit_card_types.dart';
 
 String bankName = '';
 String bankLogo = '';
@@ -28,6 +28,9 @@ class _CardPageState extends State<CardPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       cardNumber = prefs.getString('cardNumber') ?? '';
+      if (cardNumber.isNotEmpty) {
+        bankName = CreditCardUtils.identifyCardType(cardNumber);
+      }
     });
   }
 
@@ -135,9 +138,9 @@ class _CardPageState extends State<CardPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Bank Name',
-                          style: TextStyle(
+                        Text(
+                          bankName.isEmpty ? 'Bank Name' : bankName,
+                          style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
