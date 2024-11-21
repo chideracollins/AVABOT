@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/avabot_backend.dart';
 import 'gemini_response.dart';
-import '../services/gemini.dart';
 import 'user_question.dart';
 
 class ShoppingSession extends ChangeNotifier {
   late Map<UserQuestion, GeminiResponse> history = {};
-  final ChatSession chat;
 
-  ShoppingSession(this.chat);
+  ShoppingSession();
 
   bool get hastStarted {
     return history.isNotEmpty == true ? true : false;
@@ -22,7 +20,7 @@ class ShoppingSession extends ChangeNotifier {
     final UserQuestion userQuestion =
         UserQuestion(question: question, attachedImage: attachedImage);
 
-    history[userQuestion] = await Gemini.generateReply(chat, userQuestion);
+    history[userQuestion] = await AvabotBackend.reply(userQuestion);
     notifyListeners();
   }
 }
