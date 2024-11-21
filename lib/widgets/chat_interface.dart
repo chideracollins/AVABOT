@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/gemini_response.dart';
 import '../models/shopping_session.dart';
 import 'ai_reply.dart';
+import 'product_card.dart';
 import 'user_message.dart';
 
 class ChatInterface extends StatefulWidget {
@@ -22,7 +24,7 @@ class _ChatInterfaceState extends State<ChatInterface> {
         itemBuilder: (context, index) {
           List chatHistorykeys =
               Provider.of<ShoppingSession>(context).history.keys.toList();
-          List chatHistoryValues =
+          List<GeminiResponse> chatHistoryValues =
               Provider.of<ShoppingSession>(context).history.values.toList();
           return Column(
             children: [
@@ -30,7 +32,11 @@ class _ChatInterfaceState extends State<ChatInterface> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [UserMessage(chatHistorykeys[index].question!)],
               ),
-              AiReply(chatHistoryValues[index]),
+              AiReply(chatHistoryValues[index].response),
+              SizedBox(
+                height: 200,
+                child: ProductCard(chatHistoryValues[index].products),
+              ),
             ],
           );
         },

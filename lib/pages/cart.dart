@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
+// import 'package:pay_with_paystack/pay_with_paystack.dart';
 
 import '../utils/constants/colors.dart';
-import '../widgets/dialogs/failure_dialog.dart';
-import '../widgets/dialogs/success_dialog.dart';
+// import '../widgets/dialogs/failure_dialog.dart';
+// import '../widgets/dialogs/success_dialog.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -46,7 +46,7 @@ class _CartPageState extends State<CartPage> {
 
   void _processPayment() {
     final secretKey = dotenv.env['PAYSTACK_SECRET_KEY'];
-    final uniqueTransRef = PayWithPayStack().generateUuidV4();
+    // final uniqueTransRef = PayWithPayStack().generateUuidV4();
     final userEmail = FirebaseAuth.instance.currentUser?.email;
 
     if (secretKey == null || userEmail == null) {
@@ -56,32 +56,32 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    PayWithPayStack().now(
-      context: context,
-      secretKey: secretKey,
-      customerEmail: userEmail,
-      reference: uniqueTransRef,
-      currency: "NGN",
-      paymentChannel: ["card"],
-      amount: totalAmount.toInt() * 100,
-      callbackUrl: "",
-      transactionCompleted: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SuccessDialog(),
-          ),
-        );
-      },
-      transactionNotCompleted: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const FailureDialog(),
-          ),
-        );
-      },
-    );
+    // PayWithPayStack().now(
+    //   context: context,
+    //   secretKey: secretKey,
+    //   customerEmail: userEmail,
+    //   reference: uniqueTransRef,
+    //   currency: "NGN",
+    //   paymentChannel: ["card"],
+    //   amount: totalAmount.toInt() * 100,
+    //   callbackUrl: "",
+    //   transactionCompleted: () {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => const SuccessDialog(),
+    //       ),
+    //     );
+    //   },
+    //   transactionNotCompleted: () {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => const FailureDialog(),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   @override

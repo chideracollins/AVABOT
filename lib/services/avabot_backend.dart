@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart';
-import 'package:http/retry.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/gemini_response.dart';
 import '../models/product.dart';
@@ -13,13 +12,14 @@ class AvabotBackend {
 
   static User? get user => FirebaseAuth.instance.currentUser;
 
-  static GeminiResponse _createResponse(Response response) {
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  static GeminiResponse _createResponse(String response) {
+    var decodedResponse = jsonDecode(response) as Map;
+    print(decodedResponse);
 
-    List<Map> decodedProducts = decodedResponse["products"];
+    var decodedProducts = decodedResponse["products"];
     List<Product>? products;
 
-    if (decodedProducts.isNotEmpty) {
+    if (decodedProducts != null) {
       for (Map product in decodedProducts) {
         products == null
             ? products = [
@@ -48,36 +48,65 @@ class AvabotBackend {
   }
 
   static Future<GeminiResponse> reply(UserQuestion question) async {
-    String endpoint = "";
+    String endpoint = "avabot-backend.onrender.com";
     GeminiResponse aiResponse;
-    Uri url = Uri.https(endpoint);
-    RetryClient client = RetryClient(Client());
+    Uri url = Uri.https(endpoint, "/chat");
+    final request = http.MultipartRequest('POST', url);
+
+    if (question.question != null) {
+      request.fields['text'] = question.question!;
+    }
+
+    if (question.attachedImage != null) {
+      String? path = question.attachedImage?.path;
+      if (path != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          path,
+        ));
+      }
+    }
+
+    if (user?.uid != null) {
+      String? userId = user?.uid;
+      request.fields['id'] = userId!;
+    }
 
     try {
-      Map body = {"id": user?.uid};
+      int retries = 0;
+      int maxRetries = 50;
+      bool apiSuccess = false;
+      http.StreamedResponse? response;
+      print("Trying to send request");
 
-      if (question.question != null) {
-        body["text"] = question.question;
+      while (retries < maxRetries && !apiSuccess) {
+        try {
+          response = await request.send();
+          apiSuccess = true;
+        } finally {
+          retries += 1;
+        }
       }
 
-      if (question.attachedImage != null) {
-        body["image"] = question.attachedImage;
+      if (!apiSuccess) {
+        throw Exception();
       }
 
-      Response response = await client.post(url, body: body);
+      print("Sent request");
 
-      if (response.statusCode == 201) {
-        aiResponse = _createResponse(response);
+      if (response?.statusCode == 201) {
+        final responseBody = await response?.stream.bytesToString();
+        aiResponse = _createResponse(responseBody!);
       } else {
         throw Exception();
       }
     } catch (e) {
+      print(e);
       aiResponse = GeminiResponse(
           response:
               "We are having trouble communicating with server currently. Try again later.");
-    } finally {
-      client.close();
     }
+
     return aiResponse;
   }
 }

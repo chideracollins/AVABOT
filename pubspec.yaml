@@ -52,7 +52,6 @@ dependencies:
   cloud_firestore: ^5.4.1
   flutter_credit_card: ^4.0.1
   credit_card_type_detector: ^3.0.0
-  pay_with_paystack: ^1.0.10
 
 dev_dependencies:
   flutter_test:

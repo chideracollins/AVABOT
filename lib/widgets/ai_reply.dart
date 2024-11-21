@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../models/gemini_response.dart';
 import '../utils/constants/images.dart';
 
 class AiReply extends StatefulWidget {
-  final GeminiResponse response;
+  final String response;
 
   const AiReply(this.response, {super.key});
 
@@ -66,7 +65,7 @@ class _AiReplyState extends State<AiReply> {
                             ),
                           ),
                           MarkdownBody(
-                            data: widget.response.response,
+                            data: widget.response,
                           ),
                         ],
                       ),

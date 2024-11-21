@@ -15,4 +15,8 @@ class Product extends ChangeNotifier {
       required this.price,
       required this.discountPrice,
       required this.image});
+
+  double get discountPercentage {
+    return ((price - discountPrice) / price) * 100;
+  }
 }
