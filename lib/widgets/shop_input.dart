@@ -15,6 +15,7 @@ class ShopInput extends StatefulWidget {
 class _ShopInputState extends State<ShopInput> {
   final TextEditingController _textEditingController = TextEditingController();
   bool _enableInputBox = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +32,12 @@ class _ShopInputState extends State<ShopInput> {
               contentPadding:
                   const EdgeInsets.only(left: 80.0), // Adjust for icons
               enabled: _enableInputBox,
-              suffixIcon: IconButton(
-                onPressed: () async {
+              suffixIcon: GestureDetector(
+                onTap: () async {
                   if (_textEditingController.text.length < 2) return;
                   setState(() {
                     _enableInputBox = false;
+                    _isLoading = true;
                   });
                   await modelInstance.userRequest(
                       question: _textEditingController.text);
@@ -43,11 +45,11 @@ class _ShopInputState extends State<ShopInput> {
                     setState(() {
                       _textEditingController.clear();
                       _enableInputBox = true;
+                      _isLoading = false;
                     });
                   }
                 },
-                icon: Container(
-                  padding: const EdgeInsets.all(4.0),
+                child: Container(
                   decoration: BoxDecoration(
                     borderRadius:
                         const BorderRadius.all(Radius.elliptical(4.0, 4.0)),
@@ -56,11 +58,23 @@ class _ShopInputState extends State<ShopInput> {
                         Theme.of(context).colorScheme.secondary,
                         Theme.of(context).colorScheme.primary,
                       ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                   ),
-                  child: Image.asset(Images.sendIcon),
+                  child: _isLoading
+                      ? const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : SizedBox(
+                          height: 50,
+                          child: Image.asset(
+                            Images.sendIcon,
+                          ),
+                        ),
                 ),
               ),
             ),

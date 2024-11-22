@@ -26,18 +26,18 @@ class _ChatInterfaceState extends State<ChatInterface> {
               Provider.of<ShoppingSession>(context).history.keys.toList();
           List<GeminiResponse> chatHistoryValues =
               Provider.of<ShoppingSession>(context).history.values.toList();
-          return Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [UserMessage(chatHistorykeys[index].question!)],
-              ),
-              AiReply(chatHistoryValues[index].response),
-              SizedBox(
-                height: 200,
-                child: ProductCard(chatHistoryValues[index].products),
-              ),
-            ],
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 24.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [UserMessage(chatHistorykeys[index].question!)],
+                ),
+                AiReply(chatHistoryValues[index].response),
+                ProductCard(chatHistoryValues[index].products),
+              ],
+            ),
           );
         },
       ),

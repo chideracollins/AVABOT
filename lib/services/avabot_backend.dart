@@ -27,8 +27,8 @@ class AvabotBackend {
                   id: product["id"],
                   title: product["title"],
                   description: product["description"],
-                  price: product["price"],
-                  discountPrice: product["discountPercentage"],
+                  dollarPrice: product["price"],
+                  dollarDiscountPrice: product["discountPercentage"],
                   image: product["thumbnail"],
                 )
               ]
@@ -36,8 +36,8 @@ class AvabotBackend {
                 id: product["id"],
                 title: product["title"],
                 description: product["description"],
-                price: product["price"],
-                discountPrice: product["discountPercentage"],
+                dollarPrice: product["price"],
+                dollarDiscountPrice: product["discountPercentage"],
                 image: product["thumbnail"],
               ));
       }
@@ -48,7 +48,7 @@ class AvabotBackend {
   }
 
   static Future<GeminiResponse> reply(UserQuestion question) async {
-    String endpoint = "avabot-backend.onrender.com";
+    String endpoint = "avabot-backend-agent.onrender.com";
     GeminiResponse aiResponse;
     Uri url = Uri.https(endpoint, "/chat");
     final request = http.MultipartRequest('POST', url);
@@ -103,8 +103,51 @@ class AvabotBackend {
     } catch (e) {
       print(e);
       aiResponse = GeminiResponse(
-          response:
-              "We are having trouble communicating with server currently. Try again later.");
+        response:
+            "We are having trouble communicating with server currently. Try again later.",
+        products: [
+          Product(
+            id: 3,
+            title: "Powder Canister",
+            description:
+                "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+            dollarPrice: 14.99,
+            dollarDiscountPrice: 18.14,
+            image:
+                "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
+          ),
+          Product(
+            id: 3,
+            title: "Powder Canister",
+            description:
+                "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+            dollarPrice: 14.99,
+            dollarDiscountPrice: 18.14,
+            image:
+                "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
+          ),
+          Product(
+            id: 3,
+            title: "Powder Canister",
+            description:
+                "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+            dollarPrice: 14.99,
+            dollarDiscountPrice: 18.14,
+            image:
+                "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
+          ),
+          Product(
+            id: 3,
+            title: "Powder Canister",
+            description:
+                "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+            dollarPrice: 14.99,
+            dollarDiscountPrice: 18.14,
+            image:
+                "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
+          ),
+        ],
+      );
     }
 
     return aiResponse;
