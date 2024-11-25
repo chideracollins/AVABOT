@@ -12,13 +12,10 @@ class AddCardPage extends StatefulWidget {
 
 class _AddCardPageState extends State<AddCardPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormFieldState> _pinFormKey = GlobalKey<FormFieldState>();
-  final TextEditingController pinController = TextEditingController();
 
   String cardNumber = '';
   String expiryDate = '';
   String cvvCode = '';
-  String pinCode = '';
   String cardHolderName = '';
   bool isCvvFocused = false;
 
@@ -70,17 +67,16 @@ class _AddCardPageState extends State<AddCardPage> {
     await prefs.setString('cardNumber', cardNumber);
     await prefs.setString('expiryDate', expiryDate);
     await prefs.setString('cvvCode', cvvCode);
-    await prefs.setString('pinCode', pinCode);
     await prefs.setString('cardHolderName', cardHolderName);
   }
 
   void onSubmit() async {
-    if (_formKey.currentState!.validate() &&
-        _pinFormKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      _pinFormKey.currentState!.save();
       await saveCardDetails();
-      Navigator.pop(context, true);
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
     }
   }
 
@@ -96,21 +92,12 @@ class _AddCardPageState extends State<AddCardPage> {
   }
 
   @override
-  void dispose() {
-    pinController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text(
-          "Add Card",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+          title: const Text(
+        "Add Card",
+      )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -146,25 +133,7 @@ class _AddCardPageState extends State<AddCardPage> {
                   cvvValidator: validateCvv,
                   isHolderNameVisible: false,
                   obscureCvv: true,
-                  obscureNumber: true,
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                  child: TextFormField(
-                    key: _pinFormKey,
-                    controller: pinController,
-                    decoration: const InputDecoration(
-                      labelText: 'Transaction PIN',
-                      hintText: 'Enter 4-digit transaction PIN',
-                      border: UnderlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    obscureText: true,
-                    validator: validatePinCode,
-                    onSaved: (value) => pinCode = value ?? '',
-                    maxLength: 4,
-                  ),
+                  obscureNumber: false,
                 ),
                 const SizedBox(height: 24),
                 SizedBox(

@@ -81,21 +81,8 @@ class _CardPageState extends State<CardPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: const Text(
           "Bank Card",
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
       ),
       body: Column(
