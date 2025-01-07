@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../pages/shop.dart';
 import '../widgets/dialogs/error_dialog.dart';
+import '../utils/constants/colors.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -65,9 +66,6 @@ class _LoginState extends State<Login> {
           );
         }
       }
-
-      // print('Email: ${_emailController.text}');
-      // print('Password: ${_passwordController.text}');
 
       setState(() {
         _isLoading = false;
@@ -133,7 +131,7 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      validator: _validateEmail, // Validation function
+                      validator: _validateEmail,
                     ),
                   ),
 
@@ -166,7 +164,7 @@ class _LoginState extends State<Login> {
                           },
                         ),
                       ),
-                      validator: _validatePassword, // Validation function
+                      validator: _validatePassword,
                     ),
                   ),
                 ],
@@ -207,19 +205,14 @@ class _LoginState extends State<Login> {
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
                   ),
-                  onPressed:
-                      _isLoading ? null : _login, // Disable button if loading
+                  onPressed: _isLoading ? null : _login,
                   child: _isLoading
                       ? const CircularProgressIndicator(
                           color: Colors.white,
                         )
                       : Ink(
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF0797BA), Color(0xFF01F123)],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
+                            gradient: AppColors.buttonLinearGradient,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Container(

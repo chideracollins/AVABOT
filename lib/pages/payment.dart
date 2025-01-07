@@ -1,3 +1,4 @@
+import 'package:avabot/utils/helpers/card_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/shopping_cart.dart';
 import '../utils/constants/images.dart';
+import '../utils/constants/colors.dart';
+import '../utils/helpers/card_formatter.dart';
 import '../widgets/dialogs/success_dialog.dart';
 import 'shop.dart';
 
@@ -24,6 +27,8 @@ class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
 
+  bool isPaymentProcessing = false;
+
   @override
   void initState() {
     super.initState();
@@ -39,52 +44,31 @@ class _PaymentPageState extends State<PaymentPage> {
     });
   }
 
-  String? _validateCardNumber(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Card number is required';
-    }
-    String cleanedValue = value.replaceAll(RegExp(r'\D'), '');
-    if (cleanedValue.length < 16 || cleanedValue.length > 19) {
-      return 'Card number must be 16-19 digits';
-    }
-    return null;
-  }
-
-  String? _validateExpiryDate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Expiry date is required';
-    }
-    if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$').hasMatch(value)) {
-      return 'Expiry date must be in MM/YY format';
-    }
-    return null;
-  }
-
-  String? _validateCVV(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'CVV is required';
-    }
-    if (value.length != 3) {
-      return 'CVV must be 3 digits';
-    }
-    return null;
-  }
-
   void _onPayNow() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
-    await Future.delayed(const Duration(seconds: 2));
-
+    setState(() {
+      isPaymentProcessing = true;
+    });
+    await Future.delayed(const Duration(seconds: 4));
+    setState(() {
+      isPaymentProcessing = false;
+    });
     if (!mounted) return;
 
     await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (context) => const SuccessDialog(),
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: const SuccessDialog(),
+        );
+      },
     );
 
     if (!mounted) return;
@@ -163,9 +147,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(19),
-                    _CardNumberFormatter(),
+                    CardNumberFormatter(),
                   ],
-                  validator: _validateCardNumber,
+                  validator: CardValidations.validateCardNumber,
                 ),
                 const SizedBox(height: 16),
 
@@ -187,9 +171,9 @@ class _PaymentPageState extends State<PaymentPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(4),
-                          _ExpiryDateFormatter(),
+                          ExpiryDateFormatter(),
                         ],
-                        validator: _validateExpiryDate,
+                        validator: CardValidations.validateExpiryDate,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -210,7 +194,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(3),
                         ],
-                        validator: _validateCVV,
+                        validator: CardValidations.validateCvv,
                       ),
                     ),
                   ],
@@ -221,88 +205,46 @@ class _PaymentPageState extends State<PaymentPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                    ),
-                    onPressed: () {
-                      _onPayNow();
-                      shoppingCart.clearCart();
-                    },
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF0797BA), Color(0xFF01F123)],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
                       ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        constraints: const BoxConstraints(maxHeight: 50.0),
-                        child: Text(
-                          'Pay ₦${widget.totalAmount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                      onPressed: () {
+                        _onPayNow();
+                        shoppingCart.clearCart();
+                      },
+                      child: !isPaymentProcessing
+                          ? Ink(
+                              decoration: BoxDecoration(
+                                gradient: AppColors.buttonLinearGradient,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                constraints:
+                                    const BoxConstraints(maxHeight: 50.0),
+                                child: Text(
+                                  'Pay ₦${widget.totalAmount.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const CircularProgressIndicator(
+                              color: Colors.white,
+                            )),
                 ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CardNumberFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    var text = newValue.text.replaceAll(' ', '');
-    var buffer = StringBuffer();
-    for (int i = 0; i < text.length; i++) {
-      buffer.write(text[i]);
-      var nonZeroIndex = i + 1;
-      if (nonZeroIndex % 4 == 0 && nonZeroIndex != text.length) {
-        buffer.write(' ');
-      }
-    }
-    var string = buffer.toString();
-    return newValue.copyWith(
-      text: string,
-      selection: TextSelection.collapsed(offset: string.length),
-    );
-  }
-}
-
-class _ExpiryDateFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    var text = newValue.text.replaceAll('/', '');
-    var buffer = StringBuffer();
-    for (int i = 0; i < text.length; i++) {
-      buffer.write(text[i]);
-      var nonZeroIndex = i + 1;
-      if (nonZeroIndex == 2) {
-        buffer.write('/');
-      }
-    }
-    var string = buffer.toString();
-    return newValue.copyWith(
-      text: string,
-      selection: TextSelection.collapsed(offset: string.length),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../pages/shop.dart';
 import '../widgets/dialogs/error_dialog.dart';
+import '../utils/constants/colors.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -309,23 +310,14 @@ class _SignupState extends State<Signup> {
                         backgroundColor: Colors.transparent,
                         shadowColor: Colors.transparent,
                       ),
-                      onPressed: _isLoading
-                          ? null
-                          : _signup, // Disable button if loading
+                      onPressed: _isLoading ? null : _signup,
                       child: _isLoading
                           ? const CircularProgressIndicator(
-                              color: Colors.white, // Loading indicator color
+                              color: Colors.white,
                             )
                           : Ink(
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF0797BA),
-                                    Color(0xFF01F123)
-                                  ], // Gradient colors
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
+                                gradient: AppColors.buttonLinearGradient,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Container(
@@ -335,7 +327,7 @@ class _SignupState extends State<Signup> {
                                 child: const Text(
                                   'Signup',
                                   style: TextStyle(
-                                    color: Colors.white, // White text
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

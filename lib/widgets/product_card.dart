@@ -5,26 +5,22 @@ import '../models/product.dart';
 import '../models/shopping_cart.dart';
 import '../utils/constants/colors.dart';
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   final List<Product>? products;
 
   const ProductCard(this.products, {super.key});
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.products != null) {
-      List<Product> products = widget.products!;
+    if (products != null) {
       return SizedBox(
         height: 280,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: widget.products?.length,
+          itemCount: products!.length,
           itemBuilder: (context, index) {
+            final product = products![index];
+
             return Container(
               width: 200,
               margin: const EdgeInsets.only(right: 8.0),
@@ -44,7 +40,7 @@ class _ProductCardState extends State<ProductCard> {
                   Stack(
                     children: [
                       Image.network(
-                        products[index].image,
+                        product.image,
                         height: 140,
                         width: 200,
                       ),
@@ -60,7 +56,7 @@ class _ProductCardState extends State<ProductCard> {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                           child: Text(
-                            "-${products[index].discountPercentage}%",
+                            "-${product.discountPercentage}%",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -75,11 +71,12 @@ class _ProductCardState extends State<ProductCard> {
                     height: 140,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(16),
-                          bottomRight: Radius.circular(16),
-                        ),
-                        gradient: AppColors.cardLinearGradient),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      gradient: AppColors.cardLinearGradient,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -90,12 +87,12 @@ class _ProductCardState extends State<ProductCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  products[index].title,
+                                  product.title,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Expanded(
                                   child: Text(
-                                    products[index].description,
+                                    product.description,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -103,7 +100,7 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                           Text(
-                            "₦${products[index].price}",
+                            "₦${product.price}",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -111,17 +108,14 @@ class _ProductCardState extends State<ProductCard> {
                           ),
                           Consumer<ShoppingCart>(
                             builder: (context, cart, child) {
+                              final isAdded = cart.products.contains(product);
                               return GestureDetector(
                                 onTap: () {
-                                  if (products[index].addedToCart) {
-                                    cart.removeFromCart(products[index]);
+                                  if (isAdded) {
+                                    cart.removeFromCart(product);
                                   } else {
-                                    cart.addToCart(products[index]);
+                                    cart.addToCart(product);
                                   }
-                                  setState(() {
-                                    products[index].addedToCart =
-                                        !products[index].addedToCart;
-                                  });
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(top: 4),
@@ -138,9 +132,9 @@ class _ProductCardState extends State<ProductCard> {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    products[index].addedToCart == false
-                                        ? "Add to Cart"
-                                        : "Remove from Cart",
+                                    isAdded
+                                        ? "Remove from Cart"
+                                        : "Add to Cart",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context)

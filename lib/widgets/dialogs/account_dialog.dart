@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../utils/constants/colors.dart';
+import '../../auth/login.dart';
 
 class AccountDialog extends StatelessWidget {
   User? get user => FirebaseAuth.instance.currentUser;
@@ -54,7 +55,9 @@ class AccountDialog extends StatelessWidget {
   Future<void> _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     if (context.mounted) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
     }
   }
 }

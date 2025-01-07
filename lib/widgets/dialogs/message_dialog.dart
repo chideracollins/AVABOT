@@ -7,6 +7,6 @@ class MessageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog();
+    return const AlertDialog();
   }
 }

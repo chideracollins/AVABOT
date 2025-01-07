@@ -4,6 +4,7 @@ import '../widgets/dialogs/card_limit_dialog .dart';
 
 import 'add_card.dart';
 import '../services/credit_card_types.dart';
+import '../utils/constants/colors.dart';
 
 String bankName = '';
 String bankLogo = '';
@@ -110,12 +111,12 @@ class _CardPageState extends State<CardPage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.13),
+                      color: Color.fromRGBO(0, 0, 0, 0.13),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: const Offset(0, 3),
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -167,11 +168,7 @@ class _CardPageState extends State<CardPage> {
                 onPressed: _handleAddCard,
                 child: Ink(
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF0797BA), Color(0xFF01F123)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+                    gradient: AppColors.buttonLinearGradient,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Container(

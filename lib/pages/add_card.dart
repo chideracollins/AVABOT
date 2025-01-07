@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/constants/colors.dart';
+import '../utils/helpers/card_validator.dart';
+
 class AddCardPage extends StatefulWidget {
   const AddCardPage({super.key});
 
@@ -18,49 +21,6 @@ class _AddCardPageState extends State<AddCardPage> {
   String cvvCode = '';
   String cardHolderName = '';
   bool isCvvFocused = false;
-
-  String? validateCardNumber(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Card number is required';
-    }
-    if (value.length < 16 || value.length > 19) {
-      return 'Card number must be 16-19 digits';
-    }
-    return null;
-  }
-
-  String? validateExpiryDate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Expiry date is required';
-    }
-    if (!RegExp(r"^(0[1-9]|1[0-2])\/\d{2}$").hasMatch(value)) {
-      return 'Expiry date must be in MM/YY format';
-    }
-    return null;
-  }
-
-  String? validateCvv(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'CVV is required';
-    }
-    if (value.length != 3) {
-      return 'CVV must be 3 digits';
-    }
-    return null;
-  }
-
-  String? validatePinCode(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'PIN is required';
-    }
-    if (value.length != 4) {
-      return 'PIN must be 4 digits';
-    }
-    if (!RegExp(r'^\d{4}$').hasMatch(value)) {
-      return 'PIN must contain only numbers';
-    }
-    return null;
-  }
 
   Future<void> saveCardDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -128,9 +88,9 @@ class _AddCardPageState extends State<AddCardPage> {
                       isCvvFocused = data.isCvvFocused;
                     });
                   },
-                  cardNumberValidator: validateCardNumber,
-                  expiryDateValidator: validateExpiryDate,
-                  cvvValidator: validateCvv,
+                  cardNumberValidator: CardValidations.validateCardNumber,
+                  expiryDateValidator: CardValidations.validateExpiryDate,
+                  cvvValidator: CardValidations.validateCvv,
                   isHolderNameVisible: false,
                   obscureCvv: true,
                   obscureNumber: false,
@@ -152,11 +112,7 @@ class _AddCardPageState extends State<AddCardPage> {
                       onPressed: onSubmit,
                       child: Ink(
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF0797BA), Color(0xFF01F123)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
+                          gradient: AppColors.buttonLinearGradient,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Container(

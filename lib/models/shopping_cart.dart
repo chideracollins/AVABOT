@@ -13,16 +13,21 @@ class ShoppingCart extends ChangeNotifier {
 
   void addToCart(Product product) {
     products.add(product);
+    product.addedToCart = true;
     notifyListeners();
   }
 
   void removeFromCart(Product product) {
     products.remove(product);
+    product.addedToCart = false;
     notifyListeners();
   }
 
   void clearCart() {
     products.clear();
+    for (var product in products) {
+      product.addedToCart = false;
+    }
     notifyListeners();
   }
 

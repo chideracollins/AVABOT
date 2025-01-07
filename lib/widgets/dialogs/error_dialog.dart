@@ -1,3 +1,4 @@
+import '../../utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -9,31 +10,24 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(0)), // Square corners
+        borderRadius: BorderRadius.all(Radius.circular(0)),
       ),
-      title: const Text(
+      title: Text(
         'Error',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.red,
+          color: AppColors.warningColor,
         ),
       ),
       content: Text(error),
       actions: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pop(); // Close the dialog
+            Navigator.of(context).pop();
           },
           child: Container(
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF0797BA),
-                  Color(0xFF01F123),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
+              gradient: AppColors.buttonLinearGradient,
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
