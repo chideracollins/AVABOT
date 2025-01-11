@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/dialogs/card_limit_dialog .dart';
+import '../widgets/dialogs/card_limit_dialog.dart';
 
 import 'add_card.dart';
-import '../services/credit_card_types.dart';
+import '../utils/helpers/credit_card_types.dart';
 import '../utils/constants/colors.dart';
 
 String bankName = '';

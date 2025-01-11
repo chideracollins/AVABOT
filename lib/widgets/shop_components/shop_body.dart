@@ -25,7 +25,7 @@ class _ShopBodyState extends State<ShopBody> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Provider.of<ShoppingSession>(context).hastStarted
+            Provider.of<ShoppingSession>(context).hasStarted
                 ? const ChatInterface()
                 : const DefaultShopInterface(),
             const ShopInput(),

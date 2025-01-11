@@ -10,11 +10,11 @@ class UploadImage {
     return image;
   }
 
-  static Future<XFile?> fromGallery() async{
+  static Future<XFile?> fromGallery() async {
     return await _selectImage(ImageSource.gallery);
   }
 
-  static Future<XFile?> fromCamera() async{
+  static Future<XFile?> fromCamera() async {
     return await _selectImage(ImageSource.camera);
   }
 }

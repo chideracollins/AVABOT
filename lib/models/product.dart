@@ -7,6 +7,7 @@ class Product extends ChangeNotifier {
   late double price;
   late double discountPrice;
   String image;
+  
   int quantity = 1;
   bool addedToCart = false;
 

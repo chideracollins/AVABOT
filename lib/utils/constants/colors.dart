@@ -19,7 +19,7 @@ class AppColors {
 
   static Color bgAiReply =
       const Color.fromRGBO(248, 249, 254, 1); // For Avabot reply widget
-  static Color bgAiReplyDark = Color.fromARGB(255, 36, 36, 37);
+  static Color bgAiReplyDark = const Color.fromARGB(255, 36, 36, 37);
 
   static Gradient buttonLinearGradient =
       LinearGradient(colors: [tertiaryColor, primaryColor]);

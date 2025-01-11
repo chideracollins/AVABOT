@@ -1,9 +1,12 @@
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/constants/images.dart';
 import '../models/shopping_session.dart';
 import '../utils/helpers/upload_image.dart';
+import 'dialogs/error_dialog.dart';
 
 class ShopInput extends StatefulWidget {
   const ShopInput({super.key});
@@ -16,6 +19,39 @@ class _ShopInputState extends State<ShopInput> {
   final TextEditingController _textEditingController = TextEditingController();
   bool _enableInputBox = true;
   bool _isLoading = false;
+  int? _uploadingPercentage;
+
+  final CloudinaryPublic cloudinary =
+      CloudinaryPublic('dity6y4h4', 'avabot_images', cache: false);
+  String? _imageUrl;
+
+  Future<String?> uploadImage(XFile image) async {
+    try {
+      final response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(
+          image.path,
+          folder: 'avabot',
+        ),
+        onProgress: (count, total) {
+          setState(() {
+            _uploadingPercentage = ((count / total) * 100).round();
+          });
+        },
+      );
+
+      return response.secureUrl;
+    } on CloudinaryException catch (e) {
+      if (mounted) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialog(
+                  "An error ${e.message} was encountered while trying to upload the image, try again!");
+            });
+      }
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +70,16 @@ class _ShopInputState extends State<ShopInput> {
               enabled: _enableInputBox,
               suffixIcon: GestureDetector(
                 onTap: () async {
-                  if (_textEditingController.text.length < 2) return;
+                  if (_textEditingController.text.length < 2 &&
+                      _imageUrl == null) return;
                   setState(() {
                     _enableInputBox = false;
                     _isLoading = true;
                   });
                   await modelInstance.userRequest(
-                      question: _textEditingController.text);
+                    question: _textEditingController.text,
+                    attachedImage: _imageUrl,
+                  );
                   if (context.mounted) {
                     setState(() {
                       _textEditingController.clear();
@@ -82,23 +121,56 @@ class _ShopInputState extends State<ShopInput> {
           ),
           Positioned(
             left: 0,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    await UploadImage.fromGallery();
-                  },
-                  icon: const Icon(Icons.image_outlined),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await UploadImage.fromCamera();
-                  },
-                  icon: const Icon(Icons.camera_alt_outlined),
-                ),
-              ],
-            ),
-          ),
+            child: _imageUrl == null
+                ? Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          XFile? image = await UploadImage.fromGallery();
+                          if (image == null) return;
+                          _imageUrl = await uploadImage(image);
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.image_outlined),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          XFile? image = await UploadImage.fromCamera();
+                          if (image == null) return;
+                          _imageUrl = await uploadImage(image);
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.camera_alt_outlined),
+                      ),
+                    ],
+                  )
+                : Container(
+                    height: 48,
+                    width: 48,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: _uploadingPercentage == 100
+                        ? Stack(
+                            children: [
+                              Image.network(_imageUrl!),
+                              Positioned(
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _imageUrl = null;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Text('$_uploadingPercentage%'),
+                  ),
+          )
         ],
       );
     });

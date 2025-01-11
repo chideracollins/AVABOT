@@ -48,10 +48,11 @@ dependencies:
   image_picker: ^1.1.2
   firebase_core: ^3.4.1
   firebase_auth: ^5.2.1
-  firebase_storage: ^12.3.0
   cloud_firestore: ^5.4.1
   flutter_credit_card: ^4.0.1
   credit_card_type_detector: ^3.0.0
+  path: ^1.9.0
+  cloudinary_public: ^0.23.1
 
 dev_dependencies:
   flutter_test:
