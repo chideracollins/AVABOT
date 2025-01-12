@@ -44,17 +44,11 @@ class AvabotBackend {
       }
     }
 
-    print("Decoded response: $decodedResponse");
-
-    print("Trying to decode chat history");
     final chatHistory = decodedResponse["chat-history"];
-    print("Trying to decode chat history 2");
     Map<String, String>? decodedChatHistory;
     if (chatHistory != null) {
       for (var convo in chatHistory.entries) {
-        print("before the problem");
         String key = convo.key.toString();
-        print("Now the problem");
         String value = convo.value.toString();
         decodedChatHistory == null
             ? decodedChatHistory = {key: value}
@@ -62,7 +56,6 @@ class AvabotBackend {
       }
     }
 
-    print("Decoded chat history type: ${decodedChatHistory.runtimeType}");
 
     return (
       GeminiResponse(response: decodedResponse["response"], products: products),
@@ -88,47 +81,37 @@ class AvabotBackend {
     if (serializedHistory != null) {
       payload["chat-history"] = serializedHistory;
     }
-    print("\n*********PAYLOAD CREATED*********");
     try {
       int retries = 0;
-      int maxRetries = 60;
+      int maxRetries = 30;
       bool apiSuccess = false;
       http.Response? response;
 
       while (retries < maxRetries && !apiSuccess) {
         try {
-          print("sent payload $retries");
           response = await http.post(
             url,
             headers: {"Content-Type": "application/json"},
             body: json.encode(payload),
           );
           apiSuccess = true;
-        } catch (e) {
-          print(e);
         } finally {
           retries += 1;
         }
       }
 
       if (!apiSuccess) {
-        print("Throwing an exception, because: $apiSuccess");
         throw Exception();
       }
-      print(
-          "Response: ${response?.body}, response code: ${response?.statusCode}");
       if (response?.statusCode == 201) {
-        print("it worked");
         final responseBody = response?.body;
         final (geminiResponse, updatedHistory) = _createResponse(responseBody!);
         aiResponse = geminiResponse;
         serializedHistory = updatedHistory;
       } else {
-        print("I am going to throw an exception");
         throw Exception();
       }
     } catch (e) {
-      print("Exception: $e");
       aiResponse = GeminiResponse(
         response:
             "We are having trouble communicating with server currently. Try again later.",

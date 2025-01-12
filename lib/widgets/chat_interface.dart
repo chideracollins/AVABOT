@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/gemini_response.dart';
 import '../models/shopping_session.dart';
+import '../models/user_question.dart';
 import 'ai_reply.dart';
 import 'product_card.dart';
 import 'user_message.dart';
@@ -22,7 +23,7 @@ class _ChatInterfaceState extends State<ChatInterface> {
         shrinkWrap: true,
         itemCount: Provider.of<ShoppingSession>(context).history.length,
         itemBuilder: (context, index) {
-          List chatHistorykeys =
+          List<UserQuestion> chatHistorykeys =
               Provider.of<ShoppingSession>(context).history.keys.toList();
           List<GeminiResponse> chatHistoryValues =
               Provider.of<ShoppingSession>(context).history.values.toList();
@@ -32,7 +33,10 @@ class _ChatInterfaceState extends State<ChatInterface> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [UserMessage(chatHistorykeys[index].question!)],
+                  children: [
+                    UserMessage(chatHistorykeys[index].question,
+                        chatHistorykeys[index].imageUrl)
+                  ],
                 ),
                 AiReply(chatHistoryValues[index].response),
                 ProductCard(chatHistoryValues[index].products),

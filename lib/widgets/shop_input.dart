@@ -19,7 +19,8 @@ class _ShopInputState extends State<ShopInput> {
   final TextEditingController _textEditingController = TextEditingController();
   bool _enableInputBox = true;
   bool _isLoading = false;
-  int? _uploadingPercentage;
+  bool _isUploading = false;
+  double? _uploadingPercentage;
 
   final CloudinaryPublic cloudinary =
       CloudinaryPublic('dity6y4h4', 'avabot_images', cache: false);
@@ -34,11 +35,10 @@ class _ShopInputState extends State<ShopInput> {
         ),
         onProgress: (count, total) {
           setState(() {
-            _uploadingPercentage = ((count / total) * 100).round();
+            _uploadingPercentage = count / total;
           });
         },
       );
-
       return response.secureUrl;
     } on CloudinaryException catch (e) {
       if (mounted) {
@@ -65,8 +65,7 @@ class _ShopInputState extends State<ShopInput> {
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               hintText: "Message Ava...",
-              contentPadding:
-                  const EdgeInsets.only(left: 80.0), // Adjust for icons
+              contentPadding: const EdgeInsets.only(left: 80.0),
               enabled: _enableInputBox,
               suffixIcon: GestureDetector(
                 onTap: () async {
@@ -77,12 +76,15 @@ class _ShopInputState extends State<ShopInput> {
                     _isLoading = true;
                   });
                   await modelInstance.userRequest(
-                    question: _textEditingController.text,
+                    question: _textEditingController.text.isEmpty
+                        ? null
+                        : _textEditingController.text,
                     attachedImage: _imageUrl,
                   );
                   if (context.mounted) {
                     setState(() {
                       _textEditingController.clear();
+                      _imageUrl = null;
                       _enableInputBox = true;
                       _isLoading = false;
                     });
@@ -121,15 +123,20 @@ class _ShopInputState extends State<ShopInput> {
           ),
           Positioned(
             left: 0,
-            child: _imageUrl == null
+            child: _imageUrl == null && !_isUploading
                 ? Row(
                     children: [
                       IconButton(
                         onPressed: () async {
                           XFile? image = await UploadImage.fromGallery();
                           if (image == null) return;
+                          setState(() {
+                            _isUploading = true;
+                          });
                           _imageUrl = await uploadImage(image);
-                          setState(() {});
+                          setState(() {
+                            _isUploading = false;
+                          });
                         },
                         icon: const Icon(Icons.image_outlined),
                       ),
@@ -137,26 +144,38 @@ class _ShopInputState extends State<ShopInput> {
                         onPressed: () async {
                           XFile? image = await UploadImage.fromCamera();
                           if (image == null) return;
+                          setState(() {
+                            _isUploading = true;
+                          });
                           _imageUrl = await uploadImage(image);
-                          setState(() {});
+                          setState(() {
+                            _isUploading = false;
+                          });
                         },
                         icon: const Icon(Icons.camera_alt_outlined),
                       ),
                     ],
                   )
                 : Container(
-                    height: 48,
-                    width: 48,
+                    height: 60,
+                    width: 56,
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 2.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    child: _uploadingPercentage == 100
+                    child: !_isUploading
                         ? Stack(
                             children: [
-                              Image.network(_imageUrl!),
+                              Image.network(
+                                _imageUrl!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
                               Positioned(
+                                top: 0,
+                                left: 0,
                                 child: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -168,7 +187,15 @@ class _ShopInputState extends State<ShopInput> {
                               ),
                             ],
                           )
-                        : Text('$_uploadingPercentage%'),
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              value: _uploadingPercentage,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
                   ),
           )
         ],
